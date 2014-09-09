@@ -1,0 +1,82 @@
+---
+title: "Predict the manner in which excercise is done"
+author: "Kumar"
+date: "Monday, September 08, 2014"
+output: html_document
+---
+###Introduction
+
+The data for this project comes from this source: http://groupware.les.inf.puc-rio.br/har. 6 participants were asked to perform barbell lifts correctly and incorrectly in 5 different ways and data was collected from accelerometers on the belt, forearm, arm, and dumbell attached to them. the type of lifts were classified as "classe" varying from A to E.The aim of the project is to come with a model to predict the type of lift - "classe"
+
+The training data for this project are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+### Data Exploration and tidying up
+
+The training data was anayzed and was found to contain in total 160 features in it. After doing further analysis it was found that many of the columns had NA values. The following steps were done to tidy the training dataset
+
+The following rules were considered to tidy the datasets for analysis  
+- first 7 columns dropped   
+- subset of new_window not equal to "yes"
+- drop all columns with only NA
+
+This resulted in a data set with 53 columns/features from the orginal dataset that had 160 columns.
+
+### Models used
+
+An inital analysis was done to see the correlation of the variables selected. With the results it was difficult to determine if any features are less important. A nearZeroVar was also run to check if there are variables that can be elimiated.
+
+Two models were used to do the inital analysis using the caret package   
+- lda - liner discriminant analysis   
+- rf - Random forest analysis  
+
+The first pass for lda gave an accuracy of just .7405, below the accepted value. The confusion matrix of lda models prediction on training dataset with training dataset value is shown below
+```{r,echo=FALSE}
+library(png)
+library(grid)
+aa<-readPNG(system.file("img", "lda1.png", package="png"))
+grid.raster(aa)
+```
+
+The Randaom forest method gave an accruacy of .74 and the confusion matrix of rf model prediction on training dataset with actual value in training dataset is shown below 
+```{r,echo=FALSE}
+library(png)
+library(grid)
+aa<-readPNG(system.file("img", "rf1.png", package="png"))
+grid.raster(aa)
+```
+
+Both models clearly showing that tuning of model was required. The rf model giving a slighlty better prediction. Analysis of the features to find importance(varImp) was done on both models and the top 20 features that impact the outcome was selected as significant variables to predict the outcome. This resulted in 31 features(including "classe") to be selected. THe features selected is shown in appendix A. Again both LDA and rf modesl were applied and the outcomes predicted.
+
+Output of confusionMatrix using prediction from lda
+```{r,echo=FALSE}
+library(png)
+library(grid)
+aa<-readPNG(system.file("img", "lda2.png", package="png"))
+grid.raster(aa)
+```
+
+Output of confusionMatrix using prediction from rf
+```{r,echo=FALSE}
+library(png)
+library(grid)
+aa<-readPNG(system.file("img", "rf2.png", package="png"))
+grid.raster(aa)
+```
+
+### Conclusion
+Both model showed 100% accuracy in predicting the correct outcome.
+
+
+
+###Appendix A - Features selected
+```{r,echo=FALSE}
+aa1<-"C:/Users/kumar_000/Desktop/Coursera/feature.csv"
+aa<-read.csv(aa1)
+aa
+
+```
+
